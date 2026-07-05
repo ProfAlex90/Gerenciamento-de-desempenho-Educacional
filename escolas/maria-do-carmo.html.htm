@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Executivo - EE Maria do Carmo Barbosa Professora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --header-gradient: linear-gradient(135deg, #1e293b 0%, #334155 50%, #7c2d12 100%);
+            --brand-gradient: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            --bar-gradient: linear-gradient(90deg, #f97316 0%, #fbcfe8 100%);
+            --bar-alert-gradient: linear-gradient(90deg, #ef4444 0%, #fca5a5 100%);
+            --navy-dark: #0f172a;
+            --navy-light: #334155;
+            --accent-cyan: #38bdf8;
+            --teal-success: #10b981;
+            --coral-alert: #ef4444;
+            --amber-warn: #f59e0b;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow-soft: 0 10px 25px -5px rgba(0,0,0,0.03), 0 8px 10px -6px rgba(0,0,0,0.03);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 40px 20px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        /* HEADER */
+        .header-section {
+            background: var(--header-gradient);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .header-title-area { flex: 1; min-width: 300px; }
+        
+        .btn-back-portal {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        .btn-back-portal:hover { 
+            color: #60a5fa; 
+            transform: translateX(-3px);
+        }
+
+        .header-section h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(to right, #ffffff, #ffedd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-section p {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
+        .header-badge {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 18px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--amber-warn);
+            font-size: 13px;
+            max-width: 400px;
+            line-height: 1.5;
+            backdrop-filter: blur(4px);
+            color: #f1f5f9;
+        }
+
+        /* GRID LAYOUT */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        @media (max-width: 992px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* CARDS PREMIUM */
+        .content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+        }
+
+        .content-card.gradient-bg {
+            background: linear-gradient(135deg, #fff7ed 0%, #f8fafc 100%);
+            border: 1px solid #ffedd5;
+        }
+
+        .card-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--navy-dark);
+            font-size: 16px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* TABELAS MODERNIZADAS */
+        .table-responsive { overflow-x: auto; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--navy-dark);
+            padding: 12px 14px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        th:first-child { text-align: left; }
+
+        td { 
+            padding: 14px 14px; 
+            border-bottom: 1px solid #f1f5f9; 
+            color: var(--text-main);
+        }
+        
+        tr.striped { background-color: #f8fafc; }
+        
+        tr.total-row { 
+            background: #fff7ed; 
+            color: #c2410c; 
+            font-weight: 800; 
+        }
+        
+        tr.total-row td {
+            border-top: 1px solid #ffddd2;
+            border-bottom: 1px solid #ffddd2;
+        }
+
+        /* FREQUENCIA */
+        .big-number-display {
+            font-size: 46px;
+            font-weight: 800;
+            color: #c2410c;
+            letter-spacing: -0.03em;
+            margin: 10px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 800;
+            background: #ffe4e6;
+            color: #b91c1c;
+            padding: 5px 12px;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+            border: 1px solid #fca5a5;
+        }
+
+        .freq-block { margin-top: 15px; }
+        
+        .freq-item-container {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .freq-item-container:last-child { margin-bottom: 0; }
+
+        .freq-row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .freq-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .freq-meta-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .freq-value-display {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ef4444;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .freq-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .freq-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* TIMELINE & EVOLUÇÃO */
+        .timeline-section {
+            margin: 0 24px;
+            padding: 24px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .timeline-badges-wrapper {
+            display: inline-flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: #f1f5f9;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-badges-wrapper .badge-val {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            margin-left: 4px;
+        }
+        .bg-alert-soft { background: #ffe4e6; color: var(--coral-alert); }
+        .bg-success-soft { background: #d1fae5; color: var(--teal-success); }
+
+        .alert-box {
+            background-color: #fff7ed;
+            border-left: 4px solid var(--amber-warn);
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #7c2d12;
+            text-align: left;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* CONTAINER DO GRÁFICO */
+        .chart-wrapper {
+            max-width: 600px;
+            margin: 0 auto 24px auto;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        /* QUAD GRID PONTOS CRÍTICOS */
+        .quad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            padding: 0 24px;
+        }
+
+        .quad-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+        }
+        .quad-card:hover { transform: translateY(-2px); }
+        
+        .quad-card.border-teal { border-top: 4px solid var(--teal-success); }
+        .quad-card.border-coral { border-top: 4px solid var(--coral-alert); }
+        .quad-card.border-amber { border-top: 4px solid var(--amber-warn); }
+
+        .quad-card h5 { 
+            font-size: 13px; 
+            color: var(--navy-dark); 
+            text-transform: uppercase; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .quad-card p { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); }
+
+        /* SEÇÃO INFERIOR VARIACAO */
+        .variation-section {
+            margin: 0 24px; 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-md); 
+            padding: 24px;
+        }
+
+        .situation-badge {
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .situation-badge.badge-attention {
+            background-color: #ffe4e6;
+            color: var(--coral-alert);
+        }
+        .situation-badge.badge-ok {
+            background-color: #d1fae5;
+            color: var(--teal-success);
+        }
+
+        /* FOOTER METRICS BAR */
+        .footer-metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            background-color: #f8fafc;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-metric-item {
+            padding: 24px 20px;
+            border-right: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+        .footer-metric-item:hover { background: #f1f5f9; }
+        .footer-metric-item:last-child { border-right: none; }
+        
+        @media (max-width: 768px) {
+            .footer-metric-item { border-right: none; border-bottom: 1px solid var(--border-color); }
+        }
+
+        .footer-metric-item .icon { font-size: 24px; margin-bottom: 8px; }
+        .footer-metric-item strong { font-size: 12px; color: var(--navy-dark); display: block; margin-bottom: 6px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .footer-metric-item span { font-size: 12px; color: var(--text-muted); line-height: 1.5; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <div class="header-section">
+            <div class="header-title-area">
+                <a href="../index.html" class="btn-back-portal"><i class="fa-solid fa-arrow-left"></i> Painel Regional</a>
+                <h1>EE Maria do Carmo Barbosa Professora</h1>
+                <p>Análise do Índice de Frequência Anual (IFA) & Desempenho Acadêmico</p>
+            </div>
+            <div class="header-badge">
+                ⚠️ Alerta de Assiduidade: A escola apresenta crescimento na Prova Paulista, mas necessita de intervenção imediata no combate ao absenteísmo estudantil.
+            </div>
+        </div>
+
+        <div class="main-grid">
+            
+            <div class="content-card">
+                <h3 class="card-title"><i class="fa-solid fa-chart-line" style="color: var(--amber-warn)"></i> Desempenho Acadêmico (Escala 0-10)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">ANO / SÉRIE</th>
+                                <th>SARESP (Ano Ant.)</th>
+                                <th>1ª PROVA PAULISTA</th>
+                                <th>2ª PROVA PAULISTA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">6º Ano AF</td>
+                                <td>4,8</td>
+                                <td>5,66</td>
+                                <td>4,57</td>
+                            </tr>
+                            <tr class="striped">
+                                <td style="text-align: left; font-weight: 700;">7º Ano AF</td>
+                                <td>4,5</td>
+                                <td>4,46</td>
+                                <td>4,52</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">8º Ano AF</td>
+                                <td>4,3</td>
+                                <td>4,49</td>
+                                <td>4,61</td>
+                            </tr>
+                            <tr class="striped">
+                                <td style="text-align: left; font-weight: 700;">9º Ano AF</td>
+                                <td>4,3</td>
+                                <td>4,55</td>
+                                <td>5,03</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">1ª Série EM</td>
+                                <td>3,2</td>
+                                <td>3,58</td>
+                                <td>3,97</td>
+                            </tr>
+                            <tr class="striped">
+                                <td style="text-align: left; font-weight: 700;">2ª Série EM</td>
+                                <td>3,4</td>
+                                <td>4,27</td>
+                                <td>4,87</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">3ª Série EM</td>
+                                <td>2,5</td>
+                                <td>4,91</td>
+                                <td>4,55</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td style="text-align: left;">MÉDIA GERAL</td>
+                                <td>3,86</td>
+                                <td>4,56</td>
+                                <td>4,59</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="content-card gradient-bg">
+                <h3 class="card-title"><i class="fa-solid fa-square-poll-vertical" style="color: var(--coral-alert)"></i> Engajamento & Frequência Escolar</h3>
+                <div class="big-number-display">
+                    82,46% 
+                    <span class="status-pill">ABAIXO DA META</span>
+                </div>
+                
+                <div class="freq-block">
+                    <div class="freq-item-container">
+                        <div class="freq-row-header">
+                            <span class="freq-title">Ensino Fundamental (AF)</span>
+                            <span class="freq-meta-badge">Meta: 85,00%</span>
+                        </div>
+                        <span class="freq-value-display" style="color: var(--amber-warn);">84,10%</span>
+                        <div class="freq-bar-container">
+                            <div class="freq-bar-fill" style="width: 84.10%; background: var(--bar-gradient);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="freq-item-container">
+                        <div class="freq-row-header">
+                            <span class="freq-title">Ensino Médio (EM)</span>
+                            <span class="freq-meta-badge">Meta: 85,00%</span>
+                        </div>
+                        <span class="freq-value-display" style="color: var(--coral-alert);">80,27%</span>
+                        <div class="freq-bar-container">
+                            <div class="freq-bar-fill" style="width: 80.27%; background: var(--bar-alert-gradient);"></div>
+                        </div>
+                    </div>
+
+                    <div class="freq-item-container" style="border-color: #fca5a5; background: #fff5f5;">
+                        <div class="freq-row-header">
+                            <span class="freq-title" style="color: #991b1b;">Frequência Geral Escola</span>
+                            <span class="freq-meta-badge" style="background: #fca5a5; color: #991b1b;">Meta: 85,00%</span>
+                        </div>
+                        <span class="freq-value-display" style="color: var(--coral-alert);">82,46%</span>
+                        <div class="freq-bar-container">
+                            <div class="freq-bar-fill" style="width: 82.46%; background: var(--bar-alert-gradient);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 8px;"></div>
+
+        <div class="timeline-section">
+            <h3 class="card-title" style="justify-content: center;"><i class="fa-solid fa-timeline" style="color: var(--navy-light)"></i> Evolução das Médias Gerais & Projeção</h3>
+            
+            <div class="chart-wrapper">
+                <canvas id="evolutionChart"></canvas>
+            </div>
+
+            <div class="timeline-badges-wrapper">
+                <span>SARESP <span class="badge-val bg-alert-soft" style="color: #b45309; background: #fef3c7;">3,86</span></span>
+                <span style="color: #94a3b8; font-weight: normal; padding: 0 4px;">➔</span>
+                <span>1ª Prova Paulista <span class="badge-val bg-success-soft">4,56</span></span>
+                <span style="color: #94a3b8; font-weight: normal; padding: 0 4px;">➔</span>
+                <span>2ª Prova Paulista <span class="badge-val bg-success-soft" style="background: var(--teal-success); color: white;">4,59</span></span>
+            </div>
+
+            <div class="alert-box">
+                <h4 style="margin: 0 0 6px 0; color: #7c2d12; font-size: 14px; font-weight: 700;"><i class="fa-solid fa-circle-exclamation"></i> Diagnóstico Estratégico (Meta IDESP Ouro = 4,20)</h4>
+                <strong style="font-size: 13px; color: var(--teal-success); display: block; margin-bottom: 6px;">📈 +0,39 pontos acima da meta ouro em proficiência pedagógica</strong>
+                Apesar de o desempenho acadêmico geral estar positivo e superando a meta ouro regional (4,59 vs 4,20), o absenteísmo crônico pode comprometer o indicador final do IDESP. Como o cálculo do índice multiplica a proficiência pelo fluxo escolar, a regularização imediata da frequência é mandatória.
+            </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <div class="quad-grid">
+            <div class="quad-card border-coral">
+                <h5><i class="fa-solid fa-triangle-exclamation" style="color: var(--coral-alert)"></i> Queda no 6º Ano</h5>
+                <p>O <strong>6º Ano AF</strong> sofreu uma forte retração de <strong>-1,09 pontos</strong>, necessitando de recomposição urgente de aprendizagem.</p>
+            </div>
+            <div class="quad-card border-teal">
+                <h5><i class="fa-solid fa-arrow-up-right-dots" style="color: var(--teal-success)"></i> Alavancagem no Médio</h5>
+                <p>A <strong>2ª Série EM</strong> demonstrou excelente resposta pedagógica, subindo <strong>+0,60 pontos</strong> entre as duas edições.</p>
+            </div>
+            <div class="quad-card border-coral">
+                <h5><i class="fa-solid fa-user-slash" style="color: var(--coral-alert)"></i> Alerta Crítico (IFA)</h5>
+                <p>A <strong>1ª Série EM</strong> possui o menor índice de assiduidade da unidade, registrando apenas <strong>77,90%</strong> de frequência.</p>
+            </div>
+            <div class="quad-card border-amber">
+                <h5><i class="fa-solid fa-graduation-cap" style="color: var(--amber-warn)"></i> Avanço no 9º Ano</h5>
+                <p>O <strong>9º Ano AF</strong> superou a marca dos 5 pontos, crescendo <strong>+0,48 pontos</strong> e consolidando-se como destaque do Fundamental.</p>
+            </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <div class="variation-section">
+            <h3 class="card-title"><i class="fa-solid fa-arrow-up-down-list" style="color: var(--navy-light)"></i> Desempenho por Série e Variação Interna</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">SÉRIE</th>
+                            <th>1ª PROVA PAULISTA</th>
+                            <th>2ª PROVA PAULISTA</th>
+                            <th>VARIAÇÃO</th>
+                            <th>SITUAÇÃO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">6º Ano AF</td>
+                            <td>5,66</td>
+                            <td>4,57</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-1,09</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                        <tr class="striped">
+                            <td style="text-align: left; font-weight: 700;">7º Ano AF</td>
+                            <td>4,46</td>
+                            <td>4,52</td>
+                            <td style="color: var(--teal-success); font-weight: 700;">+0,06</td>
+                            <td><span class="situation-badge badge-ok">✅ OK</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">8º Ano AF</td>
+                            <td>4,49</td>
+                            <td>4,61</td>
+                            <td style="color: var(--teal-success); font-weight: 700;">+0,12</td>
+                            <td><span class="situation-badge badge-ok">✅ OK</span></td>
+                        </tr>
+                        <tr class="striped">
+                            <td style="text-align: left; font-weight: 700;">9º Ano AF</td>
+                            <td>4,55</td>
+                            <td>5,03</td>
+                            <td style="color: var(--teal-success); font-weight: 700;">+0,48</td>
+                            <td><span class="situation-badge badge-ok">✅ OK</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">1ª Série EM</td>
+                            <td>3,58</td>
+                            <td>3,97</td>
+                            <td style="color: var(--teal-success); font-weight: 700;">+0,39</td>
+                            <td><span class="situation-badge badge-ok">✅ OK</span></td>
+                        </tr>
+                        <tr class="striped">
+                            <td style="text-align: left; font-weight: 700;">2ª Série EM</td>
+                            <td>4,27</td>
+                            <td>4,87</td>
+                            <td style="color: var(--teal-success); font-weight: 700;">+0,60</td>
+                            <td><span class="situation-badge badge-ok">✅ OK</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">3ª Série EM</td>
+                            <td>4,91</td>
+                            <td>4,55</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-0,36</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer-metrics-bar">
+            <div class="footer-metric-item">
+                <div class="icon">🚨</div>
+                <strong>Busca Ativa</strong>
+                <span>Implementar de imediato comissões de busca ativa focadas no Ensino Médio e 9º Ano.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">📉</div>
+                <strong>Plano de Resgate</strong>
+                <span>Elaborar plantão pedagógico específico para conter a queda observada no 6º Ano AF.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">🤝</div>
+                <strong>Engajamento</strong>
+                <span>Promover reuniões urgentes com pais/responsáveis das turmas com IFA abaixo de 83%.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">📊</div>
+                <strong>Consolidação</strong>
+                <span>Monitorar continuamente a evolução do Ensino Médio para assegurar a manutenção da meta Ouro.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">🏅</div>
+                <strong>Foco no Fluxo</strong>
+                <span>Alinhar a gestão para entender que o ganho em proficiência só gerará o selo Ouro se a frequência subir.</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('evolutionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['SARESP', '1ª Prova Paulista', '2ª Prova Paulista'],
+                datasets: [
+                    {
+                        label: 'Média Geral da Escola',
+                        data: [3.86, 4.56, 4.59],
+                        borderColor: '#ea580c',
+                        backgroundColor: 'rgba(234, 88, 12, 0.08)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#ea580c',
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Meta Ouro IDESP',
+                        data: [4.20, 4.20, 4.20],
+                        borderColor: '#94a3b8',
+                        borderDash: [6, 6],
+                        borderWidth: 2,
+                        fill: false,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: 'Plus Jakarta Sans',
+                                weight: '600',
+                                size: 12
+                            },
+                            color: '#0f172a'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 2,
+                        max: 6,
+                        ticks: {
+                            stepSize: 1,
+                            font: { family: 'Plus Jakarta Sans' }
+                        },
+                        grid: { color: '#f1f5f9' }
+                    },
+                    x: {
+                        ticks: {
+                            font: { 
+                                family: 'Plus Jakarta Sans',
+                                weight: '700'
+                            }
+                        },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

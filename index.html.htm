@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boletins RDE | Painel de Controle Regional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            /* NOVA COR SUPERIOR: Degradê premium entre Roxo Real e Azul Noturno */
+            --header-gradient: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #311042 100%);
+            --accent-blue: #4f46e5;
+            --accent-cyan: #38bdf8;
+            --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* HEADER MODERNO E REAGRUPADO */
+        header {
+            background: var(--header-gradient);
+            color: white;
+            padding: 5rem 2rem 7.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: var(--bg-main);
+            clip-path: ellipse(60% 100% at 50% 100%);
+        }
+
+        header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(to right, #ffffff, #e0f2fe, #f3e8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ESTILO PARA O NOME DA COORDENADORA */
+        .coordinator-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #f1f5f9;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .coordinator-badge i {
+            color: var(--accent-cyan);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* ÁREA DE FILTROS AVANÇADOS */
+        .filter-container {
+            max-width: 1200px;
+            margin: -3rem auto 3rem auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 30;
+        }
+
+        .filter-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            min-width: 90px;
+        }
+
+        .filter-btn {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: var(--text-main);
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .filter-btn.active {
+            background: var(--brand-gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        /* CONTEÚDO / CARDS GRID */
+        main {
+            max-width: 1200px;
+            margin: 0 auto 5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .schools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        /* DESIGN PREMIUM DO CARD */
+        .school-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 2.25rem 2rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .school-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+            border-color: #cbd5e1;
+        }
+
+        .card-header-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .icon-container {
+            width: 54px;
+            height: 54px;
+            background: #f5f3ff;
+            color: var(--accent-blue);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .school-card:hover .icon-container {
+            background: var(--brand-gradient);
+            color: white;
+        }
+
+        .card-title-area h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .segment-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .tag-fundamental { background: #e0f2fe; color: #0369a1; }
+        .tag-medio { background: #f3e8ff; color: #6b21a8; }
+        .tag-tecnico { background: #dcfce7; color: #166534; }
+        .tag-eja { background: #fef3c7; color: #92400e; }
+        .tag-integral { background: #ffedd5; color: #c2410c; }
+        .tag-parcial { background: #f1f5f9; color: #475569; }
+
+        .card-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding: 1.25rem 0;
+            margin-bottom: 1.5rem;
+            border-top: 1px dashed #e2e8f0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .metric-block {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .metric-block i {
+            color: #94a3b8;
+        }
+
+        .metric-val {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            background: #f1f5f9;
+            color: var(--accent-blue);
+            text-decoration: none;
+            padding: 0.9rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: var(--brand-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-action i { transition: transform 0.2s ease; }
+        .btn-action:hover i { transform: translateX(4px); }
+
+        footer {
+            background: #0f172a;
+            color: #64748b;
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-top: 6rem;
+            font-size: 0.9rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        footer strong { color: #f1f5f9; font-weight: 600; }
+
+        .system-badge {
+            display: inline-flex;
+            background: #1e293b;
+            color: var(--accent-cyan);
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 1.5rem;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Unidade Regional Bragança Paulista</h2>
+        <h1>Boletins Escolares</h1>
+        <div class="coordinator-badge">
+            <i class="fa-solid fa-user-tie"></i>
+            Coordenadora Regional: <strong>Flávia Shirakashi Seimandi</strong>
+        </div>
+        <p>Sistema Unificado RDE | Gerenciamento de Desempenho Escolar </p>
+    </header>
+
+    <div class="filter-container">
+        <div class="filter-card">
+            <div class="filter-row">
+                <span class="filter-label">Segmento:</span>
+                <button class="filter-btn active" data-filter="all" onclick="setFilter('segment', 'all', this)">Todos</button>
+                <button class="filter-btn" data-filter="fundamental" onclick="setFilter('segment', 'fundamental', this)">Fundamental</button>
+                <button class="filter-btn" data-filter="medio" onclick="setFilter('segment', 'medio', this)">Médio</button>
+                <button class="filter-btn" data-filter="tecnico" onclick="setFilter('segment', 'tecnico', this)">Técnico</button>
+                <button class="filter-btn" data-filter="eja" onclick="setFilter('segment', 'eja', this)">EJA</button>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label">Regime:</span>
+                <button class="filter-btn active" data-filter="all" onclick="setFilter('period', 'all', this)">Todos</button>
+                <button class="filter-btn" data-filter="integral" onclick="setFilter('period', 'integral', this)">Tempo Integral</button>
+                <button class="filter-btn" data-filter="parcial" onclick="setFilter('period', 'parcial', this)">Tempo Parcial</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="schools-grid" id="gridEscolas"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Sistema Integrado de Consulta Educacional. Todos os direitos reservados.</p>
+        <p>Desenvolvido por: <strong>Equipe de Engenharia e Tecnologia Curricular</strong>.</p>
+        <div class="system-badge"><i class="fa-solid fa-layer-group"></i> RDE ENGINE v3.0.0 | DATA ARRAYS CONNECTED</div>
+    </footer>
+
+    <script>
+        const dataEscolas = [
+            { id: "fd", nome: "FRANCISCO DAMANTE PROFESSOR-17942", segmentos: ["fundamental", "medio", "tecnico"], periodo: "integral", matriculas: 724, turmas: 21, link: "#francisco-damante", icone: "fa-graduation-cap" },
+            { id: "gs", nome: "GABRIEL DA SILVA PROFESSOR-17917", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 596, turmas: 16, link: "#gabriel-silva", icone: "fa-school" },
+            { id: "ipl", nome: "IZOLINA PATROCINIO DE LIMA PROFESSORA-47089", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 529, turmas: 18, link: "#izolina-lima", icone: "fa-book-open" },
+            { id: "ja", nome: "JOSE ALVIM-18053", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 1269, turmas: 35, link: "#jose-alvim", icone: "fa-building-columns" },
+            { id: "jmar", nome: "JOSE MANOEL ALVARES ROSENDE PROFESSOR-45627", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 963, turmas: 27, link: "#jose-rosende", icone: "fa-chalkboard-user" },
+            { id: "jcfr", nome: "JULIO CESAR FLORIDO RAFAELI PROFESSOR-498452", segmentos: ["fundamental", "medio", "tecnico"], periodo: "integral", matriculas: 772, turmas: 24, link: "#julio-rafaeli", icone: "fa-children" },
+            { id: "masg", nome: "MARCOS ANTONIO DA SILVA GUIMARAES PROFESSOR-907327", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 622, turmas: 16, link: "#marcos-guimaraes", icone: "fa-pencil" },
+            { id: "mcbp", nome: "MARIA DO CARMO BARBOSA PROFESSORA-17887", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 757, turmas: 22, link: "#maria-barbosa", icone: "fa-chalkboard-user" },
+            { id: "mnsp", nome: "MATEUS NUNES DE SIQUEIRA PADRE-17899", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 551, turmas: 19, link: "#mateus-siqueira", icone: "fa-landmark" },
+            { id: "zbpp", nome: "ZILAH BARRETO PACITTI PROFESSORA-17929", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 777, turmas: 24, link: "#zilah-pacitti", icone: "fa-briefcase" }
+        ];
+
+        let filtrosAtivos = {
+            segment: 'all',
+            period: 'all'
+        };
+
+        function renderGrid() {
+            const grid = document.getElementById('gridEscolas');
+            grid.innerHTML = '';
+
+            dataEscolas.forEach(escola => {
+                const matchesSegment = filtrosAtivos.segment === 'all' || escola.segmentos.includes(filtrosAtivos.segment);
+                const matchesPeriod = filtrosAtivos.period === 'all' || escola.periodo === filtrosAtivos.period;
+
+                if (matchesSegment && matchesPeriod) {
+                    let tagsHTML = '';
+                    escola.segmentos.forEach(seg => {
+                        let label = seg === 'medio' ? 'Médio' : seg === 'tecnico' ? 'Técnico' : seg.charAt(0).toUpperCase() + seg.slice(1);
+                        tagsHTML += `<span class="segment-tag tag-${seg}">${label}</span>`;
+                    });
+                    
+                    let labelPeriodo = escola.periodo === 'integral' ? 'Integral' : 'Parcial';
+                    tagsHTML += `<span class="segment-tag tag-${escola.periodo}">${labelPeriodo}</span>`;
+
+                    const card = document.createElement('div');
+                    card.className = 'school-card';
+                    card.innerHTML = `
+                        <div>
+                            <div class="card-header-info">
+                                <div class="icon-container"><i class="fa-solid ${escola.icone}"></i></div>
+                                <div class="card-title-area">
+                                    <h3>${escola.nome}</h3>
+                                    <div class="tag-group">${tagsHTML}</div>
+                                </div>
+                            </div>
+                            <div class="card-metrics">
+                                <div class="metric-block">
+                                    <i class="fa-solid fa-users"></i>
+                                    <div>Matrículas: <span class="metric-val">${escola.matriculas.toLocaleString('pt-BR')}</span></div>
+                                </div>
+                                <div class="metric-block">
+                                    <i class="fa-solid fa-chalkboard"></i>
+                                    <div>Turmas: <span class="metric-val">${escola.turmas}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="${escola.link}" class="btn-action">Acessar Boletins <i class="fa-solid fa-arrow-right"></i></a>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function setFilter(type, value, btn) {
+            btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filtrosAtivos[type] = value;
+            renderGrid();
+        }
+
+        renderGrid();
+    </script>
+</body>
+</html>

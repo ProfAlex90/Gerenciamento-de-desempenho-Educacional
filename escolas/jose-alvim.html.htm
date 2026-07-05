@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Executivo - EE José Alvim</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --header-gradient: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #311042 100%);
+            --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            --bar-gradient: linear-gradient(90deg, #e11d48 0%, #fb7185 100%);
+            --navy-dark: #0f172a;
+            --navy-light: #1e1b4b;
+            --accent-cyan: #38bdf8;
+            --teal-success: #10b981;
+            --coral-alert: #f43f5e;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow-soft: 0 10px 25px -5px rgba(0,0,0,0.03), 0 8px 10px -6px rgba(0,0,0,0.03);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 40px 20px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        /* HEADER ALINHADO COM O PORTAL */
+        .header-section {
+            background: var(--header-gradient);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .header-title-area { flex: 1; min-width: 300px; }
+        
+        .btn-back-portal {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        .btn-back-portal:hover { 
+            color: #60a5fa; 
+            transform: translateX(-3px);
+        }
+
+        .header-section h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-section p {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
+        .header-badge {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 18px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--coral-alert);
+            font-size: 13px;
+            max-width: 400px;
+            line-height: 1.5;
+            backdrop-filter: blur(4px);
+            color: #f1f5f9;
+        }
+
+        /* GRID LAYOUT */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        @media (max-width: 992px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* CARDS PREMIUM */
+        .content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+        }
+
+        .content-card.gradient-bg {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--navy-dark);
+            font-size: 16px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* TABELAS MODERNIZADAS */
+        .table-responsive { overflow-x: auto; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--navy-dark);
+            padding: 12px 14px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        th:first-child { text-align: left; }
+
+        td { 
+            padding: 14px 14px; 
+            border-bottom: 1px solid #f1f5f9; 
+            color: var(--text-main);
+        }
+        
+        tr.striped { background-color: #f8fafc; }
+        
+        tr.total-row { 
+            background: #ffe4e6; 
+            color: #9f1239; 
+            font-weight: 800; 
+        }
+        
+        tr.total-row td {
+            border-top: 1px solid #fecdd3;
+            border-bottom: 1px solid #fecdd3;
+        }
+
+        /* LAYOUT REESTRUTURADO DE FREQUENCIA */
+        .big-number-display {
+            font-size: 46px;
+            font-weight: 800;
+            color: var(--navy-dark);
+            letter-spacing: -0.03em;
+            margin: 10px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.15);
+        }
+
+        .freq-block { margin-top: 15px; }
+        
+        .freq-item-container {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .freq-item-container:last-child { margin-bottom: 0; }
+
+        .freq-row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .freq-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy-dark);
+        }
+
+        .freq-meta-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .freq-value-display {
+            font-size: 20px;
+            font-weight: 800;
+            color: #e11d48;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .freq-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .freq-bar-fill {
+            height: 100%;
+            background: var(--bar-gradient);
+            border-radius: 4px;
+        }
+
+        /* TIMELINE & EVOLUÇÃO */
+        .timeline-section {
+            margin: 0 24px;
+            padding: 24px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .timeline-badges-wrapper {
+            display: inline-flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            background: #f1f5f9;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-badges-wrapper .badge-val {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            margin-left: 4px;
+        }
+        .bg-alert-soft { background: #ffe4e6; color: var(--coral-alert); }
+        .bg-success-soft { background: #d1fae5; color: var(--teal-success); }
+
+        .alert-box {
+            background-color: #ecfdf5;
+            border-left: 4px solid var(--teal-success);
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #065f46;
+            text-align: left;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* CONTAINER DO GRÁFICO */
+        .chart-wrapper {
+            max-width: 600px;
+            margin: 0 auto 24px auto;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        /* QUAD GRID PONTOS CRÍTICOS */
+        .quad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            padding: 0 24px;
+        }
+
+        .quad-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+        }
+        .quad-card:hover { transform: translateY(-2px); }
+        
+        .quad-card.border-teal { border-top: 4px solid var(--teal-success); }
+        .quad-card.border-coral { border-top: 4px solid var(--coral-alert); }
+        .quad-card.border-navy { border-top: 4px solid var(--navy-light); }
+
+        .quad-card h5 { 
+            font-size: 13px; 
+            color: var(--navy-dark); 
+            text-transform: uppercase; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .quad-card p { font-size: 12.5px; line-height: 1.5; color: var(--text-muted); }
+
+        /* SEÇÃO INFERIOR VARIACAO */
+        .variation-section {
+            margin: 0 24px; 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-md); 
+            padding: 24px;
+        }
+
+        .situation-badge {
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .situation-badge.badge-attention {
+            background-color: #ffe4e6;
+            color: var(--coral-alert);
+        }
+        .situation-badge.badge-ok {
+            background-color: #d1fae5;
+            color: var(--teal-success);
+        }
+
+        /* FOOTER METRICS BAR */
+        .footer-metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            background-color: #f8fafc;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-metric-item {
+            padding: 24px 20px;
+            border-right: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+        .footer-metric-item:hover { background: #f1f5f9; }
+        .footer-metric-item:last-child { border-right: none; }
+        
+        @media (max-width: 768px) {
+            .footer-metric-item { border-right: none; border-bottom: 1px solid var(--border-color); }
+        }
+
+        .footer-metric-item .icon { font-size: 24px; margin-bottom: 8px; }
+        .footer-metric-item strong { font-size: 12px; color: var(--navy-dark); display: block; margin-bottom: 6px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .footer-metric-item span { font-size: 12px; color: var(--text-muted); line-height: 1.5; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <div class="header-section">
+            <div class="header-title-area">
+                <a href="../index.html" class="btn-back-portal"><i class="fa-solid fa-arrow-left"></i> Painel Regional</a>
+                <h1>EE José Alvim</h1>
+                <p>Análise do Índice de Frequência Anual (IFA) & Desempenho Acadêmico</p>
+            </div>
+            <div class="header-badge">
+                ⚠️ Atenção: A assiduidade global encontra-se abaixo do patamar mínimo exigido. Plano de mitigação imediato acionado.
+            </div>
+        </div>
+
+        <div class="main-grid">
+            
+            <div class="content-card">
+                <h3 class="card-title"><i class="fa-solid fa-chart-line" style="color: #4f46e5"></i> Desempenho Acadêmico (Escala 0-10)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">ANO / SÉRIE</th>
+                                <th>SARESP (Ano Ant.)</th>
+                                <th>1ª PROVA PAULISTA</th>
+                                <th>2ª PROVA PAULISTA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">6º Ano AF</td>
+                                <td>5,5</td>
+                                <td>6,24</td>
+                                <td>4,93</td>
+                            </tr>
+                            <tr class="striped">
+                                <td style="text-align: left; font-weight: 700;">7º Ano AF</td>
+                                <td>5,1</td>
+                                <td>5,37</td>
+                                <td>5,01</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">8º Ano AF</td>
+                                <td>5,2</td>
+                                <td>5,22</td>
+                                <td>5,07</td>
+                            </tr>
+                            <tr class="striped">
+                                <td style="text-align: left; font-weight: 700;">9º Ano AF</td>
+                                <td>4,3</td>
+                                <td>4,99</td>
+                                <td>4,46</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">1ª Série EM</td>
+                                <td>3,5</td>
+                                <td>3,95</td>
+                                <td>3,83</td>
+                            </tr>
+                            <tr class="striped">
+                                <td style="text-align: left; font-weight: 700;">2ª Série EM</td>
+                                <td>3,7</td>
+                                <td>4,76</td>
+                                <td>4,51</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: 700;">3ª Série EM</td>
+                                <td>2,7</td>
+                                <td>4,97</td>
+                                <td>4,88</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td style="text-align: left;">MÉDIA GERAL</td>
+                                <td>4,29</td>
+                                <td>5,07</td>
+                                <td>4,67</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="content-card gradient-bg">
+                <h3 class="card-title"><i class="fa-solid fa-square-poll-vertical" style="color: #e11d48"></i> Frequência Escolar Atual</h3>
+                <div class="big-number-display">
+                    83,97% 
+                    <span class="status-pill">ALERTA CRÍTICO</span>
+                </div>
+                
+                <div class="freq-block">
+                    <div class="freq-item-container">
+                        <div class="freq-row-header">
+                            <span class="freq-title">Ensino Fundamental (AF)</span>
+                            <span class="freq-meta-badge">Meta: 85,00%</span>
+                        </div>
+                        <span class="freq-value-display" style="color: var(--teal-success);">86,93%</span>
+                        <div class="freq-bar-container">
+                            <div class="freq-bar-fill" style="width: 86.93%; background: linear-gradient(90deg, #10b981 0%, #34d399 100%);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="freq-item-container">
+                        <div class="freq-row-header">
+                            <span class="freq-title">Ensino Médio (EM)</span>
+                            <span class="freq-meta-badge">Meta: 85,00%</span>
+                        </div>
+                        <span class="freq-value-display">80,03%</span>
+                        <div class="freq-bar-container">
+                            <div class="freq-bar-fill" style="width: 80.03%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="freq-item-container" style="border-color: #fca5a5; background: #fff5f5;">
+                        <div class="freq-row-header">
+                            <span class="freq-title" style="color: #9f1239;">Frequência Geral Escola</span>
+                            <span class="freq-meta-badge" style="background: #fecdd3;">Meta: 85,00%</span>
+                        </div>
+                        <span class="freq-value-display" style="color: #e11d48;">83,97%</span>
+                        <div class="freq-bar-container">
+                            <div class="freq-bar-fill" style="width: 83.97%; background: var(--bar-gradient);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 8px;"></div>
+
+        <div class="timeline-section">
+            <h3 class="card-title" style="justify-content: center;"><i class="fa-solid fa-timeline" style="color: #4f46e5"></i> Evolução das Médias Gerais & Linha do Tempo</h3>
+            
+            <div class="chart-wrapper">
+                <canvas id="evolutionChart"></canvas>
+            </div>
+
+            <div class="timeline-badges-wrapper">
+                <span>SARESP <span class="badge-val bg-alert-soft">4,29</span></span>
+                <span style="color: #94a3b8; font-weight: normal; padding: 0 4px;">➔</span>
+                <span>1ª Prova Paulista <span class="badge-val bg-success-soft">5,07</span></span>
+                <span style="color: #94a3b8; font-weight: normal; padding: 0 4px;">➔</span>
+                <span>2ª Prova Paulista <span class="badge-val bg-success-soft">4,67</span></span>
+            </div>
+
+            <div class="alert-box">
+                <h4 style="margin: 0 0 6px 0; color: #065f46; font-size: 14px; font-weight: 700;"><i class="fa-solid fa-circle-check"></i> Comparativo para a Meta IDESP 2026 (Meta de Proficiência Ouro = 4,40)</h4>
+                <strong style="font-size: 13px; color: var(--teal-success); display: block; margin-bottom: 6px;">🚀 0,27 pontos ACIMA da meta ouro</strong>
+                Apesar da retração pontual na última avaliação, o resultado consolidado da escola na 2ª Prova Paulista (4,67) mantém-se acima do patamar Ouro estipulado de 4,40 para o IDESP 2026, garantindo uma margem positiva de segurança para o encerramento do ano letivo.
+            </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <div class="quad-grid">
+            <div class="quad-card border-teal">
+                <h5><i class="fa-solid fa-shield" style="color: var(--teal-success)"></i> Estabilidade Alvo</h5>
+                <p>A <strong>3ª Série EM</strong> apresentou resiliência de rendimento acadêmico na última avaliação, mantendo flutuação controlada (-0,09 pontos) e preservando a proficiência do ciclo.</p>
+            </div>
+            <div class="quad-card border-coral">
+                <h5><i class="fa-solid fa-circle-exclamation" style="color: var(--coral-alert)"></i> Atenção Crítica</h5>
+                <p>O <strong>6º Ano AF</strong> demonstrou retração de desempenho significativa (-1,31 pontos), necessitando de ações corretivas e diagnósticos imediatos nas disciplinas chaves.</p>
+            </div>
+            <div class="quad-card border-coral">
+                <h5><i class="fa-solid fa-triangle-exclamation" style="color: var(--coral-alert)"></i> Quebra de Meta IFA</h5>
+                <p><strong>Meta Geral não atingida!</strong> A assiduidade global da escola (83,97%) recuou abaixo da meta padrão de 85,00%, puxada pelo gargalo severo do Ensino Médio.</p>
+            </div>
+            <div class="quad-card border-coral">
+                <h5><i class="fa-solid fa-users-slash" style="color: var(--coral-alert)"></i> Alerta de Absenteísmo</h5>
+                <p>Nenhuma das séries do <strong>Ensino Médio</strong> atingiu o piso de frequência (1ª EM: 79,70%, 2ª EM: 80,80% e 3ª EM: 79,60%), demandando busca ativa rigorosa.</p>
+            </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <div class="variation-section">
+            <h3 class="card-title"><i class="fa-solid fa-arrow-up-down-list" style="color: #4f46e5"></i> Desempenho por Série e Variação Interna</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">SÉRIE</th>
+                            <th>1ª PROVA PAULISTA</th>
+                            <th>2ª PROVA PAULISTA</th>
+                            <th>VARIAÇÃO</th>
+                            <th>SITUAÇÃO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">6º Ano AF</td>
+                            <td>6,24</td>
+                            <td>4,93</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-1,31</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                        <tr class="striped">
+                            <td style="text-align: left; font-weight: 700;">7º Ano AF</td>
+                            <td>5,37</td>
+                            <td>5,01</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-0,36</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">8º Ano AF</td>
+                            <td>5,22</td>
+                            <td>5,07</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-0,15</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                        <tr class="striped">
+                            <td style="text-align: left; font-weight: 700;">9º Ano AF</td>
+                            <td>4,99</td>
+                            <td>4,46</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-0,53</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">1ª Série EM</td>
+                            <td>3,95</td>
+                            <td>3,83</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-0,12</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                        <tr class="striped">
+                            <td style="text-align: left; font-weight: 700;">2ª Série EM</td>
+                            <td>4,76</td>
+                            <td>4,51</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-0,25</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; font-weight: 700;">3ª Série EM</td>
+                            <td>4,97</td>
+                            <td>4,88</td>
+                            <td style="color: var(--coral-alert); font-weight: 700;">-0,09</td>
+                            <td><span class="situation-badge badge-attention">⚠️ ATENÇÃO</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer-metrics-bar">
+            <div class="footer-metric-item">
+                <div class="icon">📊</div>
+                <strong>Análise de Dados</strong>
+                <span>Mapear os descritores e habilidades críticas que geraram as quedas nas turmas.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">📋</div>
+                <strong>Plano de Ação</strong>
+                <span>Criar intervenções pedagógicas focadas nas séries com sinais de atenção crítica.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">📖</div>
+                <strong>Aulas Efetivas</strong>
+                <span>Aplicar metodologias ativas para reengajar e sedimentar conteúdos essenciais.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">👥</div>
+                <strong>Engajamento</strong>
+                <span>Monitorar a assiduidade setorial das turmas para reverter as notas em participação proativa.</span>
+            </div>
+            <div class="footer-metric-item">
+                <div class="icon">📈</div>
+                <strong>Acompanhamento</strong>
+                <span>Monitorar os simulados quinzenais celebrando as melhorias rumo ao IDESP.</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('evolutionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['SARESP', '1ª Prova Paulista', '2ª Prova Paulista'],
+                datasets: [
+                    {
+                        label: 'Média Geral da Escola',
+                        data: [4.29, 5.07, 4.67],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.08)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#4f46e5',
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Meta Ouro IDESP',
+                        data: [4.40, 4.40, 4.40],
+                        borderColor: '#10b981',
+                        borderDash: [6, 6],
+                        borderWidth: 2,
+                        fill: false,
+                        pointRadius: 0,
+                        labelColor: '#10b981'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: 'Plus Jakarta Sans',
+                                weight: '600',
+                                size: 12
+                            },
+                            color: '#0f172a'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 2,
+                        max: 7,
+                        ticks: {
+                            stepSize: 1,
+                            font: { family: 'Plus Jakarta Sans' }
+                        },
+                        grid: { color: '#f1f5f9' }
+                    },
+                    x: {
+                        ticks: {
+                            font: { 
+                                family: 'Plus Jakarta Sans',
+                                weight: '700'
+                            }
+                        },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
