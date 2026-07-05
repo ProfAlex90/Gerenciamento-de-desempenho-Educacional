@@ -10,7 +10,6 @@
     <style>
         :root {
             --bg-main: #f8fafc;
-            /* NOVA COR SUPERIOR: Degradê premium entre Roxo Real e Azul Noturno */
             --header-gradient: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #311042 100%);
             --accent-blue: #4f46e5;
             --accent-cyan: #38bdf8;
@@ -38,7 +37,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* HEADER MODERNO E REAGRUPADO */
         header {
             background: var(--header-gradient);
             color: white;
@@ -78,7 +76,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* ESTILO PARA O NOME DA COORDENADORA */
         .coordinator-badge {
             display: inline-flex;
             align-items: center;
@@ -104,7 +101,6 @@
             margin: 0 auto;
         }
 
-        /* ÁREA DE FILTROS AVANÇADOS */
         .filter-container {
             max-width: 1200px;
             margin: -3rem auto 3rem auto;
@@ -137,7 +133,8 @@
             font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
-            color: var(--text-muted);            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
             min-width: 90px;
         }
 
@@ -165,7 +162,6 @@
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
         }
 
-        /* CONTEÚDO / CARDS GRID */
         main {
             max-width: 1200px;
             margin: 0 auto 5rem auto;
@@ -178,7 +174,6 @@
             gap: 2rem;
         }
 
-        /* DESIGN PREMIUM DO CARD */
         .school-card {
             background: var(--card-bg);
             border-radius: var(--radius-lg);
@@ -347,7 +342,8 @@
         <div class="filter-card">
             <div class="filter-row">
                 <span class="filter-label">Segmento:</span>
-                <button class="filter-btn active" data-filter="all" onclick="setFilter('segment', 'all', this)">Todos</button>                <button class="filter-btn" data-filter="fundamental" onclick="setFilter('segment', 'fundamental', this)">Fundamental</button>
+                <button class="filter-btn active" data-filter="all" onclick="setFilter('segment', 'all', this)">Todos</button>
+                <button class="filter-btn" data-filter="fundamental" onclick="setFilter('segment', 'fundamental', this)">Fundamental</button>
                 <button class="filter-btn" data-filter="medio" onclick="setFilter('segment', 'medio', this)">Médio</button>
                 <button class="filter-btn" data-filter="tecnico" onclick="setFilter('segment', 'tecnico', this)">Técnico</button>
                 <button class="filter-btn" data-filter="eja" onclick="setFilter('segment', 'eja', this)">EJA</button>
@@ -373,16 +369,16 @@
 
     <script>
         const dataEscolas = [
-            { id: "fd", nome: "FRANCISCO DAMANTE PROFESSOR-17942", segmentos: ["fundamental", "medio", "tecnico"], periodo: "integral", matriculas: 724, turmas: 21, link: "escolas/francisco-damante.html", icone: "fa-graduation-cap" },
-            { id: "gs", nome: "GABRIEL DA SILVA PROFESSOR-17917", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 596, turmas: 16, link: "escolas/gabriel-da-silva.html", icone: "fa-school" },
-            { id: "ipl", nome: "IZOLINA PATROCINIO DE LIMA PROFESSORA-47089", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 529, turmas: 18, link: "escolas/izolina-patrocinio.html", icone: "fa-book-open" },
-            { id: "ja", nome: "JOSE ALVIM-18053", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 1269, turmas: 35, link: "escolas/jose-alvim.html", icone: "fa-building-columns" },
-            { id: "jmar", nome: "JOSE MANOEL ALVARES ROSENDE PROFESSOR-45627", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 963, turmas: 27, link: "escolas/jose-manoel-alvares.html", icone: "fa-chalkboard-user" },
-            { id: "jcfr", nome: "JULIO CESAR FLORIDO RAFAELI PROFESSOR-498452", segmentos: ["fundamental", "medio", "tecnico"], periodo: "integral", matriculas: 772, turmas: 24, link: "escolas/julio-cesar-florido.html", icone: "fa-children" },
-            { id: "masg", nome: "MARCOS ANTONIO DA SILVA GUIMARAES PROFESSOR-907327", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 622, turmas: 16, link: "escolas/marcos-antonio.html", icone: "fa-pencil" },
-            { id: "mcbp", nome: "MARIA DO CARMO BARBOSA PROFESSORA-17887", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 757, turmas: 22, link: "escolas/maria-do-carmo.html", icone: "fa-chalkboard-user" },
-            { id: "mnsp", nome: "MATEUS NUNES DE SIQUEIRA PADRE-17899", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 551, turmas: 19, link: "escolas/mateus-nunes.html", icone: "fa-landmark" },
-            { id: "zbpp", nome: "ZILAH BARRETO PACITTI PROFESSORA-17929", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 777, turmas: 24, link: "escolas/zilah-barreto.html", icone: "fa-briefcase" }
+            { id: "fd", nome: "FRANCISCO DAMANTE PROFESSOR-17942", segmentos: ["fundamental", "medio", "tecnico"], periodo: "integral", matriculas: 724, turmas: 21, link: "escolas/francisco-damante.html.htm", icone: "fa-graduation-cap" },
+            { id: "gs", nome: "GABRIEL DA SILVA PROFESSOR-17917", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 596, turmas: 16, link: "escolas/gabriel-da-silva.html.htm", icone: "fa-school" },
+            { id: "ipl", nome: "IZOLINA PATROCINIO DE LIMA PROFESSORA-47089", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 529, turmas: 18, link: "escolas/izolina-patrocinio.html.htm", icone: "fa-book-open" },
+            { id: "ja", nome: "JOSE ALVIM-18053", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 1269, turmas: 35, link: "escolas/jose-alvim.html.htm", icone: "fa-building-columns" },
+            { id: "jmar", nome: "JOSE MANOEL ALVARES ROSENDE PROFESSOR-45627", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 963, turmas: 27, link: "escolas/jose-manoel-alvares.html.htm", icone: "fa-chalkboard-user" },
+            { id: "jcfr", nome: "JULIO CESAR FLORIDO RAFAELI PROFESSOR-498452", segmentos: ["fundamental", "medio", "tecnico"], periodo: "integral", matriculas: 772, turmas: 24, link: "escolas/julio-cesar-florido.html.htm", icone: "fa-children" },
+            { id: "masg", nome: "MARCOS ANTONIO DA SILVA GUIMARAES PROFESSOR-907327", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 622, turmas: 16, link: "escolas/marcos-antonio.html.htm", icone: "fa-pencil" },
+            { id: "mcbp", nome: "MARIA DO CARMO BARBOSA PROFESSORA-17887", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 757, turmas: 22, link: "escolas/maria-do-carmo.html.htm", icone: "fa-chalkboard-user" },
+            { id: "mnsp", nome: "MATEUS NUNES DE SIQUEIRA PADRE-17899", segmentos: ["fundamental", "medio"], periodo: "parcial", matriculas: 551, turmas: 19, link: "escolas/mateus-nunes.html.htm", icone: "fa-landmark" },
+            { id: "zbpp", nome: "ZILAH BARRETO PACITTI PROFESSORA-17929", segmentos: ["fundamental", "medio", "tecnico"], periodo: "parcial", matriculas: 777, turmas: 24, link: "escolas/zilah-barreto.html.htm", icone: "fa-briefcase" }
         ];
 
         let filtrosAtivos = {
